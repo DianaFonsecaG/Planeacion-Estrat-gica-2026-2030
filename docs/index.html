@@ -67,6 +67,7 @@ body {
   background: linear-gradient(135deg, var(--primary) 0%, var(--teal) 100%);
   color: white; padding: 26px 32px;
   box-shadow: var(--shadow);
+  position: sticky; top: 0; z-index: 80;
 }
 .header-inner {
   max-width: 1400px; margin: 0 auto;
@@ -106,7 +107,7 @@ body {
 }
 
 /* ─── Container ──────────────────────────────────────────── */
-.container { max-width: 1400px; margin: 0 auto; padding: 24px 32px; }
+.container { max-width: 1400px; margin: 0 auto; padding: 0 32px 32px; }
 
 /* ─── Popover ────────────────────────────────────────────── */
 .popover-overlay { position: fixed; inset: 0; z-index: 90; display: none; }
@@ -153,7 +154,7 @@ body {
   background: var(--surface); border: 1px solid var(--border);
   border-radius: var(--radius); padding: 12px 18px;
   display: flex; flex-wrap: wrap; gap: 16px; align-items: center;
-  margin-bottom: 20px; box-shadow: var(--shadow-xs);
+  margin-bottom: 0; box-shadow: none; border-radius: 0; border-left: none; border-right: none; border-top: none;
 }
 .filter-group { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
 .filter-label {
@@ -243,19 +244,21 @@ body {
 .mtz-ind-code { font-size: 0.66rem; color: var(--text-lt); font-weight: 600; letter-spacing: 0.06em; margin-top: 2px; }
 
 /* Semáforo mensual */
-.mtz-month-cell { text-align: center; padding: 9px 4px !important; min-width: 52px; }
+.mtz-month-cell { text-align: center; padding: 7px 3px !important; min-width: 62px; }
 .mtz-light {
-  width: 30px; height: 30px; border-radius: 50%;
+  width: 54px; height: 28px; border-radius: 6px;
   display: inline-flex; align-items: center; justify-content: center;
   margin: 0 auto; cursor: pointer;
   transition: transform .15s, box-shadow .15s; position: relative;
+  font-size: 0.72rem; font-weight: 700; letter-spacing: -0.01em;
+  white-space: nowrap; padding: 0 4px;
 }
-.mtz-light:hover { transform: scale(1.22); box-shadow: var(--shadow); z-index: 2; }
-.mtz-light svg { width: 14px; height: 14px; }
-.mtz-light.cumple    { background: #DCFCE7; color: #16A34A; box-shadow: 0 1px 4px rgba(22,163,74,0.20); }
-.mtz-light.riesgo    { background: #FEF3C7; color: #D97706; box-shadow: 0 1px 4px rgba(245,158,11,0.20); }
-.mtz-light.critico   { background: #FEE2E2; color: #DC2626; box-shadow: 0 1px 4px rgba(220,38,38,0.20); }
-.mtz-light.pendiente { background: #F1F5F9; color: #CBD5E1; }
+.mtz-light:hover { transform: scale(1.06); box-shadow: var(--shadow); z-index: 2; }
+.mtz-light svg { display: none; }
+.mtz-light.cumple    { background: #DCFCE7; color: #16A34A; box-shadow: 0 1px 3px rgba(22,163,74,0.18); }
+.mtz-light.riesgo    { background: #FEF3C7; color: #D97706; box-shadow: 0 1px 3px rgba(245,158,11,0.18); }
+.mtz-light.critico   { background: #FEE2E2; color: #DC2626; box-shadow: 0 1px 3px rgba(220,38,38,0.18); }
+.mtz-light.pendiente { background: #F1F5F9; color: #94A3B8; font-size: 1.0rem; }
 
 /* Cumplimiento anual */
 .mtz-cumpl-cell { text-align: center; padding: 10px 14px !important; min-width: 90px; background: var(--surface-2); }
@@ -274,6 +277,56 @@ body {
 .mtz-first-row > td.mtz-persp-cell { border-top: none !important; }
 
 /* Tooltip */
+
+/* ─── Gauges de cumplimiento ─────────────────────────────── */
+.sticky-top {
+  position: sticky;
+  top: 0;
+  z-index: 70;
+  background: var(--bg);
+  padding-top: 20px;
+  margin-bottom: 0;
+  box-shadow: 0 4px 12px rgba(15,23,42,0.06);
+}
+.gauges-section {
+  margin-bottom: 0;
+}
+.gauges-row {
+  display: flex; gap: 14px; flex-wrap: wrap; align-items: stretch;
+}
+.gauge-card {
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: var(--radius-lg); padding: 20px 22px;
+  box-shadow: var(--shadow-sm);
+  display: flex; flex-direction: column; align-items: center; gap: 10px;
+  flex: 0 0 auto;
+  transition: transform .15s, box-shadow .15s;
+}
+.gauge-card:hover { transform: translateY(-2px); box-shadow: var(--shadow); }
+.gauge-card.global {
+  flex: 0 0 200px; background: linear-gradient(160deg, #F8FAFC 0%, #F0FDF4 100%);
+}
+.gauge-card.year-card { flex: 1 1 120px; min-width: 110px; max-width: 150px; }
+.gauge-card-label {
+  font-size: 0.68rem; font-weight: 700; color: var(--text-lt);
+  text-transform: uppercase; letter-spacing: 0.09em; text-align: center;
+  line-height: 1.3;
+}
+.gauge-card-label.current-yr {
+  color: var(--primary); font-weight: 800;
+}
+.gauge-card-sub {
+  font-size: 0.72rem; color: var(--text-lt); text-align: center; margin-top: -6px;
+}
+.gauge-divider {
+  width: 1px; background: var(--border); align-self: stretch; flex-shrink: 0;
+  margin: 8px 0;
+}
+@media (max-width: 720px) {
+  .gauges-row { gap: 10px; }
+  .gauge-card.global { flex: 0 0 160px; padding: 16px; }
+  .gauge-card.year-card { min-width: 90px; padding: 14px 10px; }
+}
 .mtz-tooltip {
   position: fixed; z-index: 300;
   background: rgba(15,23,42,0.96); border-radius: var(--radius-sm);
@@ -349,6 +402,15 @@ body {
   cursor: pointer; position: relative; overflow: hidden;
 }
 .ind-card:hover { transform: translateY(-2px); box-shadow: var(--shadow); border-color: #C1D3E0; }
+@keyframes cardPulse {
+  0%   { box-shadow: 0 0 0 0 rgba(8,118,178,0.5), var(--shadow-sm); border-color: var(--primary); }
+  50%  { box-shadow: 0 0 0 8px rgba(8,118,178,0.0), var(--shadow-md); border-color: var(--primary); }
+  100% { box-shadow: var(--shadow-sm); border-color: var(--border); }
+}
+.ind-card-highlight {
+  animation: cardPulse 0.9s ease-out 3;
+  border-color: var(--primary) !important;
+}
 .ind-card .accent-bar { position: absolute; left: 0; top: 0; bottom: 0; width: 4px; }
 .ind-head { display: flex; justify-content: space-between; gap: 10px; align-items: flex-start; }
 .ind-code { font-size: 0.70rem; color: var(--text-lt); font-weight: 600; letter-spacing: 0.06em; }
@@ -477,23 +539,28 @@ body {
 
   <div class="container">
 
-    <div class="filters-bar">
-      <div class="filter-group">
-        <span class="filter-label">Perspectiva:</span>
-        <div id="persp-chips" style="display:flex;gap:8px;flex-wrap:wrap"></div>
-      </div>
-      <div class="filter-group">
-        <span class="filter-label">Año:</span>
-        <div id="year-chips" style="display:flex;gap:8px;flex-wrap:wrap"></div>
+    <div class="sticky-top">
+      <div id="gauges-panel" class="gauges-section" style="padding:0 32px 16px;max-width:1400px;margin:0 auto;"></div>
+      <div class="filters-bar" style="max-width:1400px;margin:0 auto;padding:10px 32px;">
+        <div class="filter-group">
+          <span class="filter-label">Perspectiva:</span>
+          <div id="persp-chips" style="display:flex;gap:8px;flex-wrap:wrap"></div>
+        </div>
+        <div class="filter-group">
+          <span class="filter-label">Año:</span>
+          <div id="year-chips" style="display:flex;gap:8px;flex-wrap:wrap"></div>
+        </div>
       </div>
     </div>
 
+    <div style="padding: 20px 32px 0; max-width:1400px; margin: 0 auto;" id="main-content">
     <div id="matriz-panel"></div>
 
     <div class="section-title">Perspectivas e indicadores</div>
     <div id="perspectives"></div>
+    </div><!-- /main-content -->
 
-    <div class="footer">
+    <div class="footer" style="max-width:1400px;margin:0 auto;padding:22px 32px;">
       Generado automáticamente desde Tablero_Indicadores_PE.xlsx<br>
       Para actualizar: <code>python "Plan Estrategico Dashboard.py"</code>
     </div>
@@ -4665,6 +4732,113 @@ body {
 };
 
 
+
+// ════════════════════════════════════════════════════════════
+// Gauges de cumplimiento global y por año
+// ════════════════════════════════════════════════════════════
+
+// Escala de color verde→amarillo según porcentaje
+// 100% = verde puro (#22C55E), 0% = amarillo/naranja (#F59E0B)
+// Interpolación HSL: 142° (verde) → 45° (ámbar)
+function pctToColor(pct) {
+  if (pct === null || pct === undefined) return '#CBD5E1';
+  const c = Math.max(0, Math.min(1, pct));
+  // 100% → H=138 (verde vibrante), 0% → H=44 (ámbar)
+  const h = Math.round(44 + c * (138 - 44));
+  const s = Math.round(72 + c * (85 - 72));
+  const l = Math.round(52 + c * (45 - 52));
+  return `hsl(${h},${s}%,${l}%)`;
+}
+
+function buildGaugeDonut(pct, size, strokeW) {
+  size   = size   || 110;
+  strokeW = strokeW || 12;
+  const vb = 100;
+  const cx = 50, cy = 50;
+  const r  = (vb / 2) - strokeW - 2;
+  const sw = strokeW;
+  const clamped = pct === null || pct === undefined ? 0 : Math.min(Math.max(pct, 0), 1);
+  const circ = 2 * Math.PI * r;
+  const dashOffset = circ * (1 - clamped);
+  const color = pctToColor(pct);
+  const pctTxt = pct === null || pct === undefined ? '—' : Math.round(pct * 100) + '%';
+  const fs = Math.round(r * 0.46);
+
+  // Gradiente de arco: del color al color más claro
+  const gradId = 'gd' + Math.random().toString(36).slice(2,7);
+
+  return `<svg viewBox="0 0 ${vb} ${vb}" xmlns="http://www.w3.org/2000/svg"
+       style="display:block;width:${size}px;height:${size}px;">
+    <defs>
+      <linearGradient id="${gradId}" x1="0%" y1="0%" x2="100%" y2="100%">
+        <stop offset="0%" stop-color="${color}" stop-opacity="0.7"/>
+        <stop offset="100%" stop-color="${color}"/>
+      </linearGradient>
+    </defs>
+    <circle cx="${cx}" cy="${cy}" r="${r}"
+            fill="none" stroke="#E2E8F0" stroke-width="${sw}"/>
+    ${clamped > 0 ? `<circle cx="${cx}" cy="${cy}" r="${r}"
+            fill="none" stroke="url(#${gradId})" stroke-width="${sw}"
+            stroke-linecap="round"
+            stroke-dasharray="${circ}"
+            stroke-dashoffset="${dashOffset}"
+            transform="rotate(-90 ${cx} ${cy})"
+            style="transition:stroke-dashoffset .8s cubic-bezier(.4,0,.2,1);"/>` : ''}
+    <text x="${cx}" y="${cy + fs * 0.35}" text-anchor="middle"
+          font-size="${fs}" font-weight="800" font-family="inherit"
+          fill="${pct !== null ? color : '#94A3B8'}"
+          letter-spacing="-0.03em">${pctTxt}</text>
+  </svg>`;
+}
+
+function renderGauges() {
+  const root = document.getElementById('gauges-panel');
+  if (!root) return;
+  const effYear = effectiveYear();
+
+  // Calcular cumplimiento global (promedio de indicadores con datos)
+  let sumG = 0, nG = 0;
+  getAllIndicators().forEach(({ind}) => {
+    const yObj = ind.yearly.find(y => y.year === (effYear || CURRENT_YEAR)) || ind.yearly[0];
+    if (yObj && yObj.cumplimiento !== null && yObj.cumplimiento !== undefined) {
+      sumG += Math.min(yObj.cumplimiento, 1.5); nG++;
+    }
+  });
+  const globalPct = nG > 0 ? sumG / nG : null;
+
+  // Cumplimiento por año (2026-2030)
+  const yearCards = DATA.years.map(yr => {
+    let sum = 0, n = 0;
+    getAllIndicators().forEach(({ind}) => {
+      const yObj = ind.yearly.find(y => y.year === yr);
+      if (yObj && yObj.cumplimiento !== null && yObj.cumplimiento !== undefined) {
+        sum += Math.min(yObj.cumplimiento, 1.5); n++;
+      }
+    });
+    const pct = n > 0 ? sum / n : null;
+    const isCurrent = yr === CURRENT_YEAR;
+    const isActive  = effYear === yr || (effYear === null && isCurrent);
+    return `
+      <div class="gauge-card year-card ${isActive ? 'active-yr' : ''}"
+           style="${isActive ? 'border-color:'+pctToColor(pct)+';box-shadow:0 0 0 2px '+pctToColor(pct)+'33;' : ''}">
+        <div class="gauge-card-label ${isCurrent ? 'current-yr' : ''}">${yr}${isCurrent ? ' ·&nbsp;actual' : ''}</div>
+        ${buildGaugeDonut(pct, 72, 9)}
+        <div class="gauge-card-sub">${n} ind. con datos</div>
+      </div>`;
+  }).join('');
+
+  root.innerHTML = `
+    <div class="gauges-row">
+      <div class="gauge-card global">
+        <div class="gauge-card-label" style="font-size:0.74rem">Cumplimiento global · ${effYear || CURRENT_YEAR}</div>
+        ${buildGaugeDonut(globalPct, 130, 14)}
+        <div class="gauge-card-sub">${nG} de ${DATA.summary.total} indicadores con datos</div>
+      </div>
+      <div class="gauge-divider"></div>
+      ${yearCards}
+    </div>`;
+}
+
 // ════════════════════════════════════════════════════════════
 // Estado global
 // ════════════════════════════════════════════════════════════
@@ -4690,6 +4864,22 @@ const ICONS = {
 };
 
 // ── Formateo ──────────────────────────────────────────────
+// Formato compacto para celdas de la matriz (2 decimales cuando aplique)
+function fmtMtz(v, tipoMeta, unidad) {
+  if (v === null || v === undefined) return '—';
+  if (typeof v === 'string') return v;
+  if (tipoMeta === 'pct')     return (v*100).toFixed(2).replace(/\.00$/, '') + '%';
+  if (tipoMeta === 'bps')     return v.toFixed(0) + 'b';
+  if (tipoMeta === 'ratio') {
+    const s = v.toFixed(2);
+    return (unidad||'').toLowerCase().includes('x') ? s+'x' : s;
+  }
+  if (tipoMeta === 'unidades') {
+    const n = Math.round(v);
+    return n >= 10000 ? (n/1000).toFixed(1)+'k' : n.toLocaleString('es');
+  }
+  return v.toFixed(2);
+}
 function fmt(v, tipoMeta, unidad) {
   if (v === null || v === undefined || v === '') return '—';
   if (typeof v === 'string') return v;
@@ -4820,7 +5010,7 @@ function renderFilters() {
   }).join('');
   persp.querySelectorAll('.chip').forEach(c => c.addEventListener('click', () => {
     STATE.perspFilter = c.dataset.persp;
-    renderFilters(); renderMatriz(); renderPerspectives();
+    renderFilters(); renderGauges(); renderMatriz(); renderPerspectives();
   }));
 
   const years = document.getElementById('year-chips');
@@ -4836,7 +5026,7 @@ function renderFilters() {
   years.querySelectorAll('.chip').forEach(c => c.addEventListener('click', () => {
     const v = c.dataset.year;
     STATE.yearFilter = v==='all' ? 'all' : parseInt(v);
-    renderFilters(); renderMatriz(); renderPerspectives();
+    renderFilters(); renderGauges(); renderMatriz(); renderPerspectives();
   }));
 }
 
@@ -4876,12 +5066,13 @@ function renderMatriz() {
         const resultFmt = mc.result !== null ? fmt(mc.result, ind.tipo_meta, ind.unidad) : '—';
         const metaFmt = (ind.metas[yIdx] !== null && typeof ind.metas[yIdx] === 'number') ? fmt(ind.metas[yIdx], ind.tipo_meta, ind.unidad) : '—';
         const cumplFmt = mc.cumpl !== null ? (mc.cumpl * 100).toFixed(0) + '%' : '—';
+        const dispVal = mc.result !== null ? fmtMtz(mc.result, ind.tipo_meta, ind.unidad) : '–';
         monthCells += `<td class="mtz-month-cell">
           <div class="mtz-light ${mc.status}"
                data-month="${MONTH_ABBR[m]} ${yr}" data-result="${escapeHTML(resultFmt)}"
                data-meta="${escapeHTML(metaFmt)}" data-cumpl="${cumplFmt}"
                data-status="${mc.status}" data-code="${ind.code}">
-            ${ICO_ST[mc.status]}
+            ${dispVal}
           </div></td>`;
       }
 
@@ -4958,11 +5149,14 @@ function renderMatriz() {
       tip.style.left = x+'px'; tip.style.top = y+'px';
     });
     light.addEventListener('mouseleave', () => tip.classList.remove('visible'));
-    light.addEventListener('click', () => openModal(light.dataset.code));
+    light.addEventListener('click', () => scrollToIndicator(light.dataset.code, light.dataset.month));
   });
   root.querySelectorAll('tr[data-code]').forEach(row => {
     row.style.cursor = 'pointer';
-    row.addEventListener('click', e => { if(e.target.closest('.mtz-light')) return; openModal(row.dataset.code); });
+    row.addEventListener('click', e => {
+      if(e.target.closest('.mtz-light')) return;
+      scrollToIndicator(row.dataset.code, null);
+    });
   });
 }
 
@@ -5013,6 +5207,18 @@ function computePerspStats(persp) {
   return s;
 }
 
+function findLastDataMonth(ind) {
+  for (let i = ind.monthly_results.length - 1; i >= 0; i--) {
+    const v = ind.monthly_results[i];
+    if (v !== null && v !== undefined) {
+      const yearIdx  = Math.floor(i / 12);
+      const monthIdx = i % 12;
+      return { year: 2026 + yearIdx, monthIdx, val: v, label: MONTH_ABBR[monthIdx] + ' ' + (2026 + yearIdx) };
+    }
+  }
+  return null;
+}
+
 function renderCard(ind, persp, effYear) {
   let dyObj = null;
   if (effYear !== null) { dyObj = ind.yearly.find(y => y.year === effYear); }
@@ -5020,13 +5226,18 @@ function renderCard(ind, persp, effYear) {
   if (!dyObj) dyObj = ind.yearly[0];
   const status = dyObj.status;
   const meta = fmt(dyObj.meta_raw, ind.tipo_meta, ind.unidad);
-  const result = fmt(dyObj.avg_result, ind.tipo_meta, ind.unidad);
   const cumpl = fmtPct(dyObj.cumplimiento);
   const yr = dyObj.year;
   const trendIcon = ind.trend==='up'?'↑':ind.trend==='down'?'↓':ind.trend==='flat'?'→':'·';
   const trendClass = ind.trend ? 'trend-'+ind.trend : '';
   const accumulated = ind.accumulated !== null ? fmtPct(ind.accumulated) : '—';
   const alert = ind.alert || {level:'pending', text:'Sin datos'};
+
+  // Último período con dato real
+  const lastData = findLastDataMonth(ind);
+  const lastVal = lastData ? fmt(lastData.val, ind.tipo_meta, ind.unidad) : '—';
+  const lastLabel = lastData ? lastData.label : 'Sin datos';
+
   return `<div class="ind-card" data-code="${ind.code}">
     <div class="accent-bar" style="background:${persp.accent}"></div>
     <div class="ind-head">
@@ -5039,7 +5250,7 @@ function renderCard(ind, persp, effYear) {
     </div>
     <div class="ind-metrics">
       <div class="metric"><div class="label">Meta ${yr}</div><div class="value">${meta}</div></div>
-      <div class="metric"><div class="label">Resultado</div><div class="value">${result}</div></div>
+      <div class="metric"><div class="label">Último dato · ${lastLabel}</div><div class="value ${status}">${lastVal}</div></div>
       <div class="metric"><div class="label">Cumpl. ${yr}</div><div class="value ${status}">${cumpl}</div></div>
     </div>
     <div class="chart-wrap"><canvas id="chart-${ind.code}"></canvas></div>
@@ -5143,6 +5354,66 @@ function buildDetailChart(ind, color) {
   });
 }
 
+// Scroll a la tarjeta del indicador en la sección de perspectivas y hace highlight
+function scrollToIndicator(code, monthLabel) {
+  // Asegurar que la perspectiva del indicador sea visible
+  const ind = findIndicator(code);
+  if (!ind) return;
+  const persp = DATA.perspectives.find(p => p.indicators.includes(ind));
+  if (!persp) return;
+
+  // Si hay filtro de perspectiva activo que no incluye este indicador, resetear
+  if (STATE.perspFilter !== 'all' && STATE.perspFilter !== persp.key) {
+    STATE.perspFilter = 'all';
+    renderFilters(); renderGauges(); renderMatriz(); renderPerspectives();
+  }
+
+  // Esperar render y luego hacer scroll
+  setTimeout(() => {
+    const card = document.querySelector(`.ind-card[data-code="${code}"]`);
+    if (!card) return;
+
+    // Calcular offset sticky
+    const stickyEl = document.querySelector('.sticky-top');
+    const headerEl = document.querySelector('.header');
+    const stickyH = (stickyEl ? stickyEl.offsetHeight : 0) + (headerEl ? headerEl.offsetHeight : 0);
+
+    const cardTop = card.getBoundingClientRect().top + window.scrollY - stickyH - 16;
+    window.scrollTo({ top: cardTop, behavior: 'smooth' });
+
+    // Highlight: borde pulsante en la card
+    card.classList.remove('ind-card-highlight');
+    void card.offsetWidth; // reflow
+    card.classList.add('ind-card-highlight');
+    setTimeout(() => card.classList.remove('ind-card-highlight'), 2800);
+
+    // Si se pasó un mes específico, resaltar esa columna en el mini-chart
+    if (monthLabel) {
+      const monthIdx = ['Ene','Feb','Mar','Abr','May','Jun','Jul','Ago','Sep','Oct','Nov','Dic']
+        .findIndex(m => monthLabel.startsWith(m));
+      if (monthIdx >= 0) {
+        const yr = parseInt(monthLabel.split(' ')[1]) || CURRENT_YEAR;
+        const flatIdx = (yr - 2026) * 12 + monthIdx;
+        highlightChartPoint(code, flatIdx);
+      }
+    }
+  }, STATE.perspFilter !== 'all' ? 120 : 20);
+}
+
+// Resalta un punto en el sparkline de la card
+function highlightChartPoint(code, flatIdx) {
+  const chart = STATE.charts[code];
+  if (!chart) return;
+  const meta = {
+    datasetIndex: 0,
+    index: flatIdx,
+  };
+  chart.tooltip.setActiveElements([meta], {x:0, y:0});
+  chart.setDatasetVisibility(0, true);
+  chart.update('none');
+  setTimeout(() => { try { chart.tooltip.setActiveElements([], {}); chart.update('none'); } catch(e){} }, 2500);
+}
+
 function closeModal() {
   document.getElementById('modal-overlay').classList.remove('active');
   if(STATE.charts.detail){try{STATE.charts.detail.destroy();}catch(e){}delete STATE.charts.detail;}
@@ -5175,6 +5446,7 @@ function shade(hex, percent) {
 // ── Init ──────────────────────────────────────────────────
 document.addEventListener('DOMContentLoaded', () => {
   renderHeaderKPIs();
+  renderGauges();
   renderFilters();
   renderMatriz();
   renderPerspectives();
