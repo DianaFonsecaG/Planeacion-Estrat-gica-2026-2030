@@ -14964,9 +14964,6 @@ body {
     ]
   }
 };
-const SEMAFORO_COLORS = (DATA.thresholds && DATA.thresholds.colors)
-  ? DATA.thresholds.colors
-  : SEMAFORO_COLORS_DEFAULT;
 
 
 
@@ -14977,29 +14974,40 @@ const SEMAFORO_COLORS = (DATA.thresholds && DATA.thresholds.colors)
 // Escala de color verde→amarillo según porcentaje
 // 100% = verde puro (#22C55E), 0% = amarillo/naranja (#F59E0B)
 // Interpolación HSL: 142° (verde) → 45° (ámbar)
+/* Colorimetría exacta del Excel — Parámetros semáforo */
+const SEMAFORO_COLORS_DEFAULT = [
+  { lim:1.00, bg:'#83F1B7', fg:'#006666', name:'Excelente'      },
+  { lim:0.90, bg:'#B9F9CE', fg:'#15803D', name:'Sobresaliente'  },
+  { lim:0.80, bg:'#B9F9CE', fg:'#15803D', name:'Satisfactorio'  },
+  { lim:0.70, bg:'#FEF9C3', fg:'#A16207', name:'Aceptable'      },
+  { lim:0.60, bg:'#FEF9C3', fg:'#A16207', name:'En seguimiento' },
+  { lim:0.50, bg:'#FFD3A7', fg:'#D97706', name:'En riesgo'      },
+  { lim:0.40, bg:'#FFD3A7', fg:'#EA580C', name:'En alerta'      },
+  { lim:0.30, bg:'#FEE2E2', fg:'#DC2626', name:'Crítico'        },
+  { lim:0.10, bg:'#FEC9C9', fg:'#B91C1C', name:'Muy crítico'    },
+  { lim:0.00, bg:'#FDEDED', fg:'#991B1B', name:'Inaceptable'    },
+];
+
+function getSemaforoColors() {
+  return (typeof DATA !== 'undefined' && DATA.thresholds && DATA.thresholds.colors)
+    ? DATA.thresholds.colors
+    : SEMAFORO_COLORS_DEFAULT;
+}
+
+function getSemaforoEntry(pct) {
+  if (pct === null || pct === undefined) return { bg:'#F1F5F9', fg:'#64748B', name:'Pendiente' };
+  const colors = getSemaforoColors();
+  for (const e of colors) { if (pct >= e.lim) return e; }
+  return colors[colors.length - 1];
+}
+
 function pctToColor(pct) {
   if (pct === null || pct === undefined) return '#CBD5E1';
-  const thr = (typeof DATA !== 'undefined' && DATA.thresholds) ? DATA.thresholds : {};
-  const dec = thr.deciles || {};
-  if (Object.keys(dec).length >= 3) {
-    if (pct >= (dec['Excelente']     ?? 1.00)) return '#059669';
-    if (pct >= (dec['Sobresaliente'] ?? 0.90)) return '#22C55E';
-    if (pct >= (dec['Satisfactorio'] ?? 0.80)) return '#16A34A';
-    if (pct >= (dec['Aceptable']     ?? 0.70)) return '#2563EB';
-    if (pct >= (dec['En seguimiento']?? 0.60)) return '#CA8A04';
-    if (pct >= (dec['En riesgo']     ?? 0.50)) return '#F59E0B';
-    if (pct >= (dec['En alerta']     ?? 0.40)) return '#EA580C';
-    if (pct >= (dec['Crítico']       ?? 0.30)) return '#DC2626';
-    if (pct >= (dec['Muy crítico']   ?? 0.10)) return '#B91C1C';
-    return '#991B1B';
-  }
-  // Fallback gradiente continuo
-  const c = Math.max(0, Math.min(1, pct));
-  const h = Math.round(44 + c * (138 - 44));
-  const s = Math.round(72 + c * (85 - 72));
-  const l = Math.round(52 + c * (45 - 52));
-  return `hsl(${h},${s}%,${l}%)`;
+  return getSemaforoEntry(pct).fg;
 }
+
+function pctToBg(pct) { return getSemaforoEntry(pct).bg; }
+function pctToName(pct) { return getSemaforoEntry(pct).name; }
 
 function buildGaugeDonut(pct, size, strokeW) {
   size   = size   || 110;
