@@ -466,14 +466,7 @@ body {
   border-right: 2px solid var(--border) !important;
   vertical-align: middle;
 }
-.mtz-tend-badge {
-  display: inline-flex; align-items: center; gap: 3px;
-  padding: 3px 7px; border-radius: 999px;
-  font-size: 0.63rem; font-weight: 700; white-space: nowrap;
-}
-.mtz-tend-badge.crecer    { background: #DCFCE7; color: #15803D; }
-.mtz-tend-badge.reducir   { background: #FEE2E2; color: #DC2626; }
-.mtz-tend-badge.mantener  { background: #EFF6FF; color: #1D4ED8; }
+/* mtz-tend-badge eliminado — ahora es texto plano */
 /* Responsive móvil: ocultar tendencia */
 @media (max-width: 480px) {
   .mtz-th-tend, .mtz-tend-cell { display: none; }
@@ -9834,7 +9827,7 @@ body {
           "ini": "Crecimiento de la base social",
           "ini_icon": "🌱",
           "ini_desc": "Impulsar el crecimiento de la base social mediante la vinculación de nuevos asociados, soportado en ofertas diferenciadas que respondan a las necesidades de los segmentos objetivo.",
-          "formula": "Total asociados al cierre del semestre vs meta",
+          "formula": "((Asociados periodo actual − periodo anterior) ÷ periodo anterior); meta = total asociados",
           "desc": "Mide el crecimiento del número de asociados activos.",
           "unidad": "N° asociados",
           "tipo": "simple",
@@ -10287,7 +10280,7 @@ body {
           "ini": "Retención y profundización",
           "ini_icon": "💗",
           "ini_desc": "Reducir la desvinculación de asociados e incrementar el uso del portafolio de servicios mediante acciones de retención, seguimiento y profundización comercial.",
-          "formula": "(Total asociados final − Asociados nuevos) ÷ Total asociados inicial",
+          "formula": "(Total asociados final − asociados nuevos) ÷ Total asociados inicial",
           "desc": "Mide la proporción de asociados que permanecen activos al final del período.",
           "unidad": "%",
           "tipo": "retencion",
@@ -11866,7 +11859,7 @@ body {
           "ini": "Automatización de procesos",
           "ini_icon": "🤖",
           "ini_desc": "Automatizar procesos operativos y de servicio al asociado para mejorar eficiencia, calidad y tiempos de respuesta.",
-          "formula": "Tareas automatizadas ÷ Total tareas identificadas",
+          "formula": "Tareas automatizadas  ÷ Total tareas identificadas (según inventario de procesos)",
           "desc": "Mide el porcentaje de tareas automatizadas sobre el total identificado.",
           "unidad": "%",
           "tipo": "ratio",
@@ -15505,7 +15498,7 @@ function renderMatriz() {
     const nowM = new Date().getMonth();
     theadRow1 = `<tr>
       <th class="mtz-th-ind" rowspan="2" style="vertical-align:middle;text-align:center;font-size:0.70rem;font-weight:800;letter-spacing:0.08em;">INDICADOR</th>
-      <th class="mtz-th-tend" rowspan="2" style="vertical-align:middle;text-align:center;font-size:0.60rem;font-weight:700;letter-spacing:0.06em;">TEND.</th>
+      <th class="mtz-th-tend" rowspan="2" style="vertical-align:middle;text-align:center;font-size:0.58rem;font-weight:700;letter-spacing:0.04em;line-height:1.3;">TEND.<br>ESPERADA</th>
       ${yearsToShow.map(yr => `<th class="mtz-th-year ${yr===CURRENT_YEAR?'mtz-th-year-current':''}" colspan="12">
         ${yr}${yr===CURRENT_YEAR?' ★ actual':''}
       </th>`).join('')}
@@ -15530,7 +15523,7 @@ function renderMatriz() {
     const MFULL_S = ['Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'];
     theadRow2 = `<tr>
       <th class="mtz-th-ind" style="vertical-align:middle;text-align:center;font-size:0.70rem;font-weight:800;letter-spacing:0.08em;">INDICADOR</th>
-      <th class="mtz-th-tend" style="vertical-align:middle;text-align:center;font-size:0.60rem;font-weight:700;letter-spacing:0.06em;">TEND.</th>
+      <th class="mtz-th-tend" style="vertical-align:middle;text-align:center;font-size:0.58rem;font-weight:700;letter-spacing:0.04em;line-height:1.3;">TEND.<br>ESPERADA</th>
       ${MONTH_ABBR.map((m,mi)=>`<th class="mtz-th-mes ${mi===curMonthIdx&&singleYr===CURRENT_YEAR?'current':''}">
         <div class="mtz-th-mes-inner">
           <span class="mtz-th-mes-abbr">${m}</span>
@@ -15585,7 +15578,6 @@ function renderMatriz() {
 
       // Tendencia badge
       const tendLow = (ind.tend||'').toLowerCase();
-      const tendClass = tendLow.includes('crec') ? 'crecer' : tendLow.includes('reduc') ? 'reducir' : 'mantener';
       const tendIco   = tendLow.includes('crec') ? '↑' : tendLow.includes('reduc') ? '↓' : '↔';
       const tendLbl   = ind.tend || '—';
       const formulaShort = (ind.formula||'').length > 60
@@ -15599,7 +15591,7 @@ function renderMatriz() {
           <div class="mtz-ind-formula">${formulaShort}</div>
         </td>
         <td class="mtz-tend-cell">
-          <span class="mtz-tend-badge ${tendClass}">${tendIco} ${tendLbl}</span>
+          <span style="font-size:0.72rem;font-weight:600;color:var(--text-dark);">${tendIco} ${tendLbl}</span>
         </td>
         ${monthCells}
         <td class="mtz-cumpl-cell" style="right:0">
